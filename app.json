@@ -9,12 +9,6 @@
   "env": {
     "NODE_ENV": {
       "value": "production"
-    },
-    "BASE_URL": {
-      "description": "Public address of this server, e.g. https://api.silatech.site"
-    },
-    "MONGODB_URI": {
-      "description": "MongoDB connection string used by the website and the admin panel"
     }
   }
 }
