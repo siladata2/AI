@@ -1,57 +1,28 @@
 
-const fs = require("fs");
-const path = require("path");
 const brain = require("./sila-brain");
 
-const DATA_FILE = path.join(__dirname, "sila-data.json");
+const args = process.argv.slice(2);
 
-function readTrainingData() {
-  if (!fs.existsSync(DATA_FILE)) {
-    return [];
-  }
-
-  const data = JSON.parse(
-    fs.readFileSync(DATA_FILE, "utf8")
-  );
-
-  if (!Array.isArray(data)) {
-    throw new Error("Training data lazima iwe array.");
-  }
-
-  return data.filter(
-    item => typeof item === "string" && item.trim()
-  );
-}
-
-function addTrainingSentence(sentence) {
-  const data = readTrainingData();
-  const cleaned = sentence.trim();
-
-  if (cleaned.length < 2) {
-    throw new Error("Sentensi ni fupi sana.");
-  }
-
-  data.push(cleaned);
-
-  const result = brain.trainModel(data);
-
-  console.log("SILA AI imefundishwa upya.");
-  console.log("Sentensi zote:", result.trainingSentences);
-  console.log("Msamiati:", result.vocabularySize);
-}
-
-const sentence = process.argv.slice(2).join(" ");
-
-if (!sentence) {
-  console.log(
-    'Matumizi: node train.js "SILA AI inajifunza Kiswahili"'
-  );
+if (args.length < 3) {
+  console.log("Matumizi:");
+  console.log('node train.js "intent" "mfano wa swali" "jibu"');
+  console.log("");
+  console.log("Mfano:");
+  console.log('node train.js "greeting" "niaje bro" "Poa sana! Wewe je?"');
   process.exit(1);
 }
 
+const [intent, example, ...responseParts] = args;
+const response = responseParts.join(" ");
+
 try {
-  addTrainingSentence(sentence);
+  const result = brain.addTrainingExample(intent, example, response);
+
+  console.log("SILA AI imeongezewa mfano mpya.");
+  console.log("Intent:", result.intent);
+  console.log("Mifano ya intent hii:", result.examples);
+  console.log("Model imehifadhiwa kwenye sila-model.json");
 } catch (error) {
-  console.error("Imeshindikana:", error.message);
+  console.error("Imeshindikana kufundisha model:", error.message);
   process.exitCode = 1;
 }
