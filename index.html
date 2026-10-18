@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#09090f">
+  <title>SILA AI — Sila Tech</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #09090f;
+      color: #f5f5fa;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 20px 7%;
+      border-bottom: 1px solid #252532;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .brand span {
+      color: #9b7aff;
+    }
+
+    .status {
+      color: #8ee5b1;
+      font-size: 12px;
+    }
+
+    main {
+      width: 100%;
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 65px 20px 30px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .logo {
+      width: 65px;
+      height: 65px;
+      margin: 0 auto 20px;
+      border: 1px solid #6e55d9;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      font-weight: bold;
+      background: #19152b;
+      color: #bba8ff;
+    }
+
+    h1 {
+      font-size: clamp(30px, 6vw, 48px);
+      margin: 0 0 12px;
+      letter-spacing: -1.5px;
+    }
+
+    h1 span {
+      color: #a18aff;
+    }
+
+    .subtitle {
+      color: #9999ad;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    #chat {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .message {
+      padding: 15px 17px;
+      border: 1px solid #292938;
+      border-radius: 15px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .user {
+      align-self: flex-end;
+      max-width: 85%;
+      background: #28203f;
+    }
+
+    .assistant {
+      align-self: flex-start;
+      max-width: 95%;
+      background: #12121b;
+    }
+
+    .composer {
+      margin-top: auto;
+      border: 1px solid #353346;
+      background: #12121b;
+      border-radius: 18px;
+      padding: 10px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    textarea {
+      flex: 1;
+      min-width: 0;
+      resize: vertical;
+      max-height: 180px;
+      min-height: 45px;
+      border: 0;
+      outline: none;
+      background: transparent;
+      color: white;
+      font: inherit;
+      padding: 12px 8px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 13px 18px;
+      background: #9475ff;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: wait;
+    }
+
+    .hint {
+      color: #77778b;
+      text-align: center;
+      font-size: 11px;
+      margin-top: 13px;
+    }
+
+    footer {
+      padding: 22px;
+      border-top: 1px solid #252532;
+      color: #77778b;
+      text-align: center;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="brand">SILA <span>AI</span></div>
+    <div class="status">● System online</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="logo">S</div>
+      <h1>Meet <span>SILA AI</span></h1>
+      <p class="subtitle">
+        Your own AI project, built by Sila Tech.<br>
+        A new intelligence starts here.
+      </p>
+    </section>
+
+    <section id="chat" aria-live="polite">
+      <div class="message assistant">
+        Karibu SILA AI. Mfumo wetu wa majaribio uko tayari.
+        Andika ujumbe wako ili ujaribu mawasiliano.
+      </div>
+    </section>
+
+    <form class="composer" id="chatForm">
+      <textarea
+        id="message"
+        placeholder="Message SILA AI..."
+        aria-label="Your message"
+        maxlength="5000"
+        required
+      ></textarea>
+      <button id="sendButton" type="submit">Send</button>
+    </form>
+
+    <p class="hint">
+      SILA AI V1 · Test mode · Built by Sila Tech
+    </p>
+  </main>
+
+  <footer>
+    © 2026 SILA AI · Powered by Sila Tech
+  </footer>
+
+  <script>
+    const form = document.getElementById("chatForm");
+    const input = document.getElementById("message");
+    const chat = document.getElementById("chat");
+    const sendButton = document.getElementById("sendButton");
+
+    function addMessage(text, type) {
+      const element = document.createElement("div");
+      element.className = `message ${type}`;
+      element.textContent = text;
+      chat.appendChild(element);
+      element.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const message = input.value.trim();
+
+      if (!message || sendButton.disabled) return;
+
+      addMessage(message, "user");
+      input.value = "";
+      sendButton.disabled = true;
+      sendButton.textContent = "...";
+
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ message })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Request failed.");
+        }
+
+        addMessage(data.reply, "assistant");
+      } catch (error) {
+        addMessage(
+          "Imeshindikana kuwasiliana na server. Hakikisha backend inaendelea kufanya kazi.",
+          "assistant"
+        );
+      } finally {
+        sendButton.disabled = false;
+        sendButton.textContent = "Send";
+        input.focus();
+      }
+    });
+  </script>
+</body>
+</html>
